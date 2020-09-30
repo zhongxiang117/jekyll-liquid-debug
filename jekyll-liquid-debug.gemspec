@@ -1,4 +1,4 @@
-require File.expand_path("lib/jekyll-liquid-debug/version", __dir__)
+require_relative "lib/jekyll-liquid-debug/version"
 
 Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.5.0"
