@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.summary       = "Light Weight Jekyll Liquid Template Debug Package"
   s.license       = "MIT"
   s.homepage      = "https://github.com/zhongxiang117/jekyll-liquid-debug"
-  s.files         = Dir["bin/*","data/*","lib/**/*", "jekyll-liquid-debug.gemspec", "LICENSE"]
+  s.files         = Dir["bin/*","data/*","lib/**/*", "jekyll-liquid-debug.gemspec", "LICENSE","README.md"]
   s.require_paths = ["lib"]
 
   s.add_dependency("liquid", "~> 4.0.0")
