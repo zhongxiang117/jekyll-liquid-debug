@@ -38,6 +38,7 @@ The options in **Input files** will look like,
 ```
 -f, --file [FILE]                input liquid template
 -t, --html [FILE]                input html template
+-y, --yaml [FILE]                input YAML file, parsed to `site.[var]'
 -k, --md [FILE]                  input raw markdown file, precedent for option `-t'
     --out-html                   output html file, overwrite may happen
     --out-md                     output markdown file, overwrite may happen
@@ -97,16 +98,32 @@ I also have a post about the [`liquid-white-space-control`](https://zhongxiang11
 
 ### Debug Liquid Template With Raw Markdown As Input
 
-So what will happen if you want to code a `liquid` with the `Markdown` file?
+So what will happen if you want to code a `liquid` with the `YAML` & `Markdown` file?
 
 The answer is you can use it as the input.
 
-Please be aware of that, the `Markdown` file you input will be converted to `html` file at background in first, then the new variable `content` will be generated, which you can invoke inside the `liquid`.
+Please be aware of that, the `Markdown` file you input will be parsed using variables defined `YAML` file first, and then converted to `html` file at background, then the new variable `content` will be generated, which you can invoke inside the `liquid`.
 
-
-For example you have a `Markdown` file, which is under a name `myMarkdown.md`,
+For example, if you have a `_config.yml` file,
 
 ```
+debug: true
+
+editor:
+  windows : notepad
+  ubuntu  : gedit
+  mac     : textedit
+```
+
+you have a `Markdown` file, which is under a name `myMarkdown.md`,
+
+```
+{%- if site.debug -%}
+    {{ site.editor.windows }}
+    {{ site.editor.ubuntu }}
+    {{ site.editor.mac }}
+{%- endif %}
+
 Good good **study**, day day **up**.
 
 Add oil!
@@ -125,7 +142,7 @@ If you want to remove the `<strong></strong>` tag for words `study` & `up` & `kn
 Run,
 
 ```
-jekyll-liquid-debug -f myfile.liquid -m myMarkdown.md
+jekyll-liquid-debug -f myfile.liquid -m myMarkdown.md -y _config.yml
 ```
 
 **Note:** you can also only convert your raw `Markdown` to `HTML`, by using `jekyll-liquid-debug -m myMarkdown.md --out-html`.

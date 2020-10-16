@@ -1,2 +1,1 @@
-* add read _config.yml file
 * add parse command implicit

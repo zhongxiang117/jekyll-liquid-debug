@@ -1,6 +1,8 @@
 require "liquid"
 require "kramdown"
 require "optparse"
+require "hash_dot"
+require "yaml"
 require_relative "jekyll-liquid-debug/version"
 
 class JekyllLiquidDebug
@@ -9,7 +11,9 @@ class JekyllLiquidDebug
       # Hash to contain all settings
       # it is needed to set default values, to help use Struct make Hash dottable.
       # because Struct does not have method to check whether key exists
-      args = {file:false, html:false, kmd:false, outhtml:false, outmd:false}
+      args = {file:false, html:false, kmd:false, outhtml:false, outmd:false,
+              yaml:false,
+      }
       OptionParser.new do |opt|
         opt.banner = "Usage: jekyll-liquid-debug [options]"
         opt.separator ""
@@ -21,6 +25,10 @@ class JekyllLiquidDebug
 
         opt.on("-t", "--html [FILE]", String, "input html template") do |v|
           args[:html] = Parser.func_set_file(v)
+        end
+
+        opt.on("-y", "--yaml [FILE]", String, "input YAML file, parsed to `site.[var]'") do |v|
+          args[:yaml] = Parser.func_set_file(v)
         end
 
         opt.on("-k", "--md [FILE]", String, "input raw markdown file, precedent for option `-t'") do |v|
@@ -74,6 +82,13 @@ class JekyllLiquidDebug
       puts "Note: using input markdown file < #{args.kmd} >"
       # read input markdown
       fmd = File.open(args.kmd).read
+
+      if args.yaml
+        puts "Note: using input YAML file < #{args.yaml} >"
+        site = YAML.load_file(args.yaml).to_dot
+        fmd = Liquid::Template.parse(fmd).render("site" => site)
+      end
+
       # html conversion
       content = Kramdown::Document.new(fmd).to_html
       fbase = File.basename(args.kmd,".*")
